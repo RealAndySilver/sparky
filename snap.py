@@ -1,23 +1,44 @@
-import pyspark
-import pandas
+from datetime import datetime
+import math
 from pyspark.sql import SparkSession
 import findspark
-from datetime import datetime
-
 findspark.init()
 
 spark = SparkSession.builder.master("local[*]").getOrCreate()
-spark.conf.set("spark.sql.repl.eagerEval.enabled", True) # type: ignore # Property used to format output tables better
+spark.conf.set("spark.sql.repl.eagerEval.enabled", True)  # type: ignore
 
-data_df = spark.read.csv('data/underdrain.csv', header=True, inferSchema=True)  # type: ignore
+
+def get_time(date_text):
+    """Get time from date text"""
+    try:
+        date_text = datetime.strptime(date_text, '%Y/%m/%d %H:%M:%S+00')      
+    except ValueError:
+        date_text = datetime.strptime("1900/01/01 01:01:01+00", '%Y/%m/%d %H:%M:%S+00')
+    
+    return date_text
+
+def snap_time(timestamp, resolution=1):
+    """Snap time to resolution"""
+    if resolution <= 0:
+        resolution = 1
+    resolution_ms = resolution * 60 * 1000
+    res = datetime.fromtimestamp(math.floor(timestamp / resolution_ms) * resolution_ms)
+    print(res)
+    return res
+
+data_df = spark.read.csv('data/underdrain.csv',
+                         header=True,
+                         inferSchema=True)  # type: ignore
 data_df.printSchema()
-data_df.toPandas()
-data_df.filter(data_df.SHAPE_Length<100).show(10)
+# data_df.na.drop(subset=['DCH_INSTALL_DATE']).show(truncate=False)
+filtered_df = data_df.filter(data_df.DCH_INSTALL_DATE != 'None')
 
+# data_df.toPandas()
 
-# data_df.drop('DCH_GRPH_KEY', 'DCH_DSTNTN_TYPE', 'DCH_UPS_ELEV_FT_NBR', 'DCH_DNS_ELEV_FT_NBR', 'DCH_STREAM_NAME', 'DCH_FEA_KEY')
-
-select = data_df.select(
-    'OBJECTID','DCH_INSTALL_DATE','SHAPE_Length','DCH_OWNER_NAME'
-)
-select.agg({'SHAPE_Length':'avg'})
+filtered_df.foreach(
+    lambda x:
+        snap_time(
+            get_time(x[18]).timestamp(),
+            5  # type: ignore
+        )
+    )
