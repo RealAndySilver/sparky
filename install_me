@@ -1,0 +1,4 @@
+pip install --upgrade pip
+pip install pyspark
+pip install findspark
+pip install pandas
