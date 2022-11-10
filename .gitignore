@@ -1,2 +1,12 @@
+
+#ignore data folder
 data/
+
+#ignore the .vscode folder
+.vscode/
+
+#ignore the .devcontainer folder
 .devcontainer/
+
+#ignore spark tars, jars, and and folders (do not name any files or folders with spark in them)
+spark-**

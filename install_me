@@ -1,3 +1,8 @@
+alias py=python
+
+wget -q https://downloads.apache.org/spark/spark-3.2.2/spark-3.2.2-bin-hadoop2.7.tgz
+tar xf spark-3.2.2-bin-hadoop2.7.tgz
+
 pip install --upgrade pip
 pip install pyspark
 pip install findspark

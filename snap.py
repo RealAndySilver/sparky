@@ -30,7 +30,6 @@ def snap_time_to_resolution(timestamp, resolution=1):
 
 def snap_row(date, resolution=5):
     """Snap row to resolution"""
-    print('LE DEIT', date)
     timestamp = get_timestamp(date)
     snapped_time = snap_time_to_resolution(timestamp, resolution)
     return snapped_time
