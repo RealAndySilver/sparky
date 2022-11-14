@@ -1,6 +1,10 @@
 
 #ignore data folder
 data/
-
+#ignore content folder
+dependencies/
 #ignore spark tars, jars, and and folders (do not name any files or folders with spark in them)
 spark-**
+
+#ignore ipynb checkpoints
+.ipynb_checkpoints

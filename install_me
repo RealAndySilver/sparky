@@ -1,9 +1,45 @@
-alias py=python
 
-wget -q https://downloads.apache.org/spark/spark-3.2.2/spark-3.2.2-bin-hadoop2.7.tgz
-tar xf spark-3.2.2-bin-hadoop2.7.tgz
+# # Run as root or with sudo condition
+# # if [ "$EUID" -ne 0 ]
+# #   then echo "Please run as root"
+# #   exit
+# # fi
 
-pip install --upgrade pip
-pip install pyspark
-pip install findspark
-pip install pandas
+# SPARK_VERSION="3.2.2"
+# HADOOP_VERSION="3.2"
+# DEPENDENCIES_FOLDER="dependencies"
+
+
+# if [ $DEV_MODE = true ]; then
+#     echo "Dev mode is on. Installing dependencies from local folder"
+#     pip install $DEPENDENCIES_FOLDER/pyspark-$SPARK_VERSION.tar.gz
+#     pip install $DEPENDENCIES_FOLDER/py4j-
+#   if [ -d "${DEPENDENCIES_FOLDER}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}" ]; then
+#     echo "Spark already installed"
+#   else
+#       mkdir ${DEPENDENCIES_FOLDER}
+#       echo "${DEPENDENCIES_FOLDER} folder created"
+
+#       echo "Downloading spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz... this may take a while"
+#       wget -q https://downloads.apache.org/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz
+
+#       echo "Extracting spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz... this as well, may take a while"
+#       tar xf spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz
+#       echo "spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz extracted"
+
+#       rm -rf spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz
+#       echo "spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz removed"
+
+#       echo "Relocating spark-2.4.4-bin-hadoop${HADOOP_VERSION} to ${DEPENDENCIES_FOLDER} folder"
+#       mv spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} ${DEPENDENCIES_FOLDER}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}
+#       echo "spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} relocated"
+#   fi 
+# else
+#   echo "Dev mode is off. Not installling Hadoop dependencies"
+# fi
+
+# echo "installing extra stuff"
+# pip install --upgrade pip
+# pip install pyspark
+# pip install findspark
+# pip install pandas

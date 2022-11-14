@@ -1,0 +1,16 @@
+version: "3"
+services:
+  sciencepro:
+    image: jupyter/all-spark-notebook:latest
+    user: root
+    ports:
+      - "8889:8888"
+    volumes:
+      - "./app:/home/jovyan/work"
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - JUPYTER_TOKEN=1111
+      - GRANT_SUDO=yes
+    restart: always
+    container_name: sciencepro
+  
