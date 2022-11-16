@@ -1,33 +1,49 @@
-# -- Software Stack Version
+## ==========================================================================================
+# Script Version: 0.1.0
+# Author: Andres Abril
+# Date: 11-15-2022
+# Organization: Live Earth LLC.
+# Description: This script will build the latest version of the Live Earth Spark Cluster.
+## ==========================================================================================
 
+# Setting dependency versions for the build
+
+JUPYTERLAB_VERSION="2.1.5"
 SPARK_VERSION="3.0.0"
 HADOOP_VERSION="2.7"
-JUPYTERLAB_VERSION="2.1.5"
 
-# -- Building the Images
+echo "Building JupyterLab $JUPYTERLAB_VERSION with Spark $SPARK_VERSION and Hadoop $HADOOP_VERSION"
 
+# Build images
+
+echo "Building cluster-base"
 docker build \
   -f cluster-base.Dockerfile \
   -t cluster-base .
 
+echo "Building spark-base"
 docker build \
   --build-arg spark_version="${SPARK_VERSION}" \
   --build-arg hadoop_version="${HADOOP_VERSION}" \
   -f spark-base.Dockerfile \
   -t spark-base .
 
+echo "Building spark-master"
 docker build \
   -f spark-master.Dockerfile \
   -t spark-master .
 
+echo "Building spark-worker"
 docker build \
   -f spark-worker.Dockerfile \
   -t spark-worker .
 
+echo "Building jupyterlab"
 docker build \
   --build-arg spark_version="${SPARK_VERSION}" \
   --build-arg jupyterlab_version="${JUPYTERLAB_VERSION}" \
   -f jupyterlab.Dockerfile \
   -t jupyterlab .
 
+# Docker composing the cluster
 docker-compose up 
