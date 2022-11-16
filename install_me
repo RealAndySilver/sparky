@@ -1,4 +1,6 @@
-
+cd scripts
+source build.me
+cd ..
 # # Run as root or with sudo condition
 # # if [ "$EUID" -ne 0 ]
 # #   then echo "Please run as root"
