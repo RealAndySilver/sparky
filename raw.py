@@ -4,14 +4,28 @@ from datetime import datetime
 from pyspark.sql.types import TimestampType
 from pyspark.sql.functions import udf
 
-spark = SparkSession.builder.master("local").getOrCreate()
-sc = spark.sparkContext
+# spark = SparkSession.builder.master("local").getOrCreate()
+# sc = spark.sparkContext
 
-data_df = spark.read.csv('data/underdrain.csv',
+spark = SparkSession.builder.\
+        appName("clustered-science").\
+        master("spark://spark-master:7077").\
+        config("spark.executor.memory", "2g").\
+        getOrCreate()
+
+import wget
+
+url = "https://raw.githubusercontent.com/RealAndySilver/sparky/0e433680f7577e15c15641001b9a3114137b85e5/data/underdrain.csv"
+wget.download(url)
+
+data_df = spark.read.csv('underdrain.csv',
                          header=True,
                          inferSchema=True)
 data_df.printSchema()
 filtered_df = data_df.filter(data_df.DCH_INSTALL_DATE.isNotNull())
+
+filtered_rdd = filtered_df.rdd
+filtered_rdd.take(10)
 
 def get_timestamp(date_text):
     """Get timestamp from date text"""
@@ -34,7 +48,7 @@ def snap_time_to_resolution(timestamp, resolution=1):
     return snapped_time
 
 @udf(returnType=TimestampType())
-def snap_row(date, resolution=15):
+def snap_row(date, resolution=2):
     """Snap row to resolution"""
     timestamp = get_timestamp(date)
     snapped_time = snap_time_to_resolution(timestamp, resolution)
@@ -42,11 +56,4 @@ def snap_row(date, resolution=15):
 
 filtered_df.withColumn('SNAPPED_TIME', snap_row(filtered_df.DCH_INSTALL_DATE)).write.mode("overwrite").csv("data/csvs", header=True)
 
-# @udf(returnType=TimestampType())
-# def snap_row(date, resolution=5):
-#     """Snap row to resolution"""
-#     timestamp = get_timestamp(date)
-#     snapped_time = snap_time_to_resolution(timestamp, resolution)
-#     return snapped_time
-# 
-# filtered_df.withColumn('SNAPPED_TIME', snap_row(data_df.DCH_INSTALL_DATE)).write.mode("overwrite").csv("data/csvs", header=True)
+spark.sql("SHOW USER FUNCTIONS").collect()

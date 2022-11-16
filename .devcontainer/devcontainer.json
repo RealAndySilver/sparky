@@ -1,5 +1,5 @@
 {
-	"name": "PySpark",
+	"name": "LiveEarthScience",
 	"image": "mcr.microsoft.com/devcontainers/python:3.10-bullseye",
 	"features": {
 		"ghcr.io/devcontainers/features/node:1": {},

@@ -8,3 +8,6 @@ spark-**
 
 #ignore ipynb checkpoints
 .ipynb_checkpoints
+
+#ignore spark-warehouse
+spark-warehouse/
