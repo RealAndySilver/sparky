@@ -11,7 +11,7 @@ services:
     ports:
       - 8888:8888
     volumes:
-      - "/opt/workspace"
+      - "../src:/opt/workspace"
   spark-master:
     image: spark-master
     container_name: spark-master
