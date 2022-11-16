@@ -8,7 +8,7 @@ from pyspark.sql.functions import udf
 # sc = spark.sparkContext
 
 spark = SparkSession.builder.\
-        appName("clustered-science").\
+        appName("live-earth-science-cluster").\
         master("spark://spark-master:7077").\
         config("spark.executor.memory", "2g").\
         getOrCreate()
