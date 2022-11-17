@@ -1,15 +1,12 @@
 FROM cluster-base
 
-# -- Layer: JupyterLab
-
-ARG spark_version=3.0.0
-ARG jupyterlab_version=2.1.5
+ARG spark_version=$SPARK_VERSION
+ARG jupyterlab_version=$JUPYTERLAB_VERSION
 
 RUN apt-get update -y && \
     apt-get install -y python3-pip && \
+    apt-get install -y r-base && \
     pip3 install wget pyspark==${spark_version} jupyterlab==${jupyterlab_version}
-
-# -- Runtime
 
 EXPOSE 8888
 WORKDIR ${SHARED_WORKSPACE}

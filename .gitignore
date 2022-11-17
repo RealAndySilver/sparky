@@ -7,6 +7,9 @@ dependencies/
 #ignore DS_Store files
 .DS_Store
 
+#ignore .Trash files
+.Trash*
+
 #ignore ipynb checkpoints
 .ipynb_checkpoints
 

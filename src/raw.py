@@ -4,21 +4,28 @@ from datetime import datetime
 from pyspark.sql.types import TimestampType
 from pyspark.sql.functions import udf
 
-# spark = SparkSession.builder.master("local").getOrCreate()
-# sc = spark.sparkContext
-
 spark = SparkSession.builder.\
         appName("live-earth-science-cluster").\
-        master("spark://spark-master:7077").\
-        config("spark.executor.memory", "2g").\
-        getOrCreate()
+        master("local").getOrCreate()
+
+sc = spark.sparkContext
+
+# spark = SparkSession.builder.\
+#         appName("live-earth-science-cluster").\
+#         master("spark://spark-master:7077").\
+#         config("spark.executor.memory", "2g").\
+#         getOrCreate()
 
 import wget
+import shutil
 
 url = "https://raw.githubusercontent.com/RealAndySilver/sparky/0e433680f7577e15c15641001b9a3114137b85e5/data/underdrain.csv"
-wget.download(url)
+name = 'data.csv'
+destination = 'data/'+name
+wget.download(url, name)
+shutil.move(name, destination)
 
-data_df = spark.read.csv('underdrain.csv',
+data_df = spark.read.csv('./data/'+name,
                          header=True,
                          inferSchema=True)
 data_df.printSchema()
@@ -48,7 +55,7 @@ def snap_time_to_resolution(timestamp, resolution=1):
     return snapped_time
 
 @udf(returnType=TimestampType())
-def snap_row(date, resolution=2):
+def snap_row(date, resolution=20):
     """Snap row to resolution"""
     timestamp = get_timestamp(date)
     snapped_time = snap_time_to_resolution(timestamp, resolution)
